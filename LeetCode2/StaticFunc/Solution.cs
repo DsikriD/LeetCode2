@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,15 +49,12 @@ namespace LeetCode2.StaticFunc
                     {
                         return result;
                     }
-
-                     
                 }
                 result += current;
             }
 
             return result;
         }
-
 
         public  class ListNode
         {
@@ -112,7 +110,6 @@ namespace LeetCode2.StaticFunc
 
             return res;
         }
-
 
         public static int MyAtoi(string s)
         {
@@ -201,6 +198,39 @@ namespace LeetCode2.StaticFunc
             return res;
         }
 
+        public static int MaxArea(int[] height)
+        {
+            int MaxArea = 0;
+            int start = 0,end = height.Length-1;
+
+            while (start < end)
+            {
+                if (height[start] <= height[end])
+                {
+                    Console.WriteLine($"Lenght end:{end} start {start}    height:{height[start]},{height[end]} MinL:{GetMinHeight(height[start], height[end])} area:{(end - start) * GetMinHeight(height[start], height[end])}");
+                    MaxArea = GetMaxArea(MaxArea, (end - start) * GetMinHeight(height[start], height[end]));
+                    Console.WriteLine("Max:" + MaxArea);
+                    start++;
+                }
+                else
+                {
+                    Console.WriteLine($"Lenght end:{end} start{start};height:{height[start]},{height[end]} MinL:{GetMinHeight(height[start], height[end])} area:{(end - start) * GetMinHeight(height[start], height[end])}");
+                    MaxArea = GetMaxArea(MaxArea, (end - start) * GetMinHeight(height[start], height[end]));
+                    Console.WriteLine("Max:" + MaxArea);
+                    end--;
+                }
+                
+            }
+
+            Console.WriteLine(MaxArea);
+
+            return MaxArea;
+        }
+
+        public static int GetMaxArea(int NowArea, int TempArea) => NowArea < TempArea ? TempArea : NowArea;
+
+
+        public static int GetMinHeight(int i, int j) => i < j ? i : j; 
 
 
 

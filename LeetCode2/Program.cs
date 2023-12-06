@@ -9,11 +9,10 @@ namespace LeetCode2
     {
         static void Main(string[] args)
         {
-            ListNode listNode = new ListNode(1);
-            ListNode listNode1 = new ListNode(2,listNode);
-            ListNode listNode2 = new ListNode(3,listNode1);
+            int[] max = { 2, 3, 4, 5, 18, 17, 6 };
 
-            Solution.MergeTwoLists(listNode, null);
+
+            Solution.MaxArea(max);
 
 
         }

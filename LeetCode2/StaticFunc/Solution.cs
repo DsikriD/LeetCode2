@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
+using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
@@ -34,16 +36,16 @@ namespace LeetCode2.StaticFunc
         {
             string result = "";
 
-            if( strs==null || strs.Length==0)
-                return result;  
+            if (strs == null || strs.Length == 0)
+                return result;
 
             string shortStr = strs.OrderBy(name => name.Length).FirstOrDefault();
 
-            for(int i = 0; i < shortStr.Length; i++)
+            for (int i = 0; i < shortStr.Length; i++)
             {
                 var current = strs[0][i];
 
-                for(int j = 0; j < strs.Length; j++)
+                for (int j = 0; j < strs.Length; j++)
                 {
                     if (strs[j][i] != current)
                     {
@@ -56,7 +58,7 @@ namespace LeetCode2.StaticFunc
             return result;
         }
 
-        public  class ListNode
+        public class ListNode
         {
             public int val;
             public ListNode next;
@@ -71,18 +73,18 @@ namespace LeetCode2.StaticFunc
         {
             ListNode res = null;
             ListNode temp = null;
- 
+
             int carry = 0;
-            while (l1!=null||l2!=null)
+            while (l1 != null || l2 != null)
             {
                 int sum = carry;
 
                 if (l2 != null)
                 {
                     sum += l2.val;
-                    l2 = l2.next; 
+                    l2 = l2.next;
                 }
-                if (l1!=null)
+                if (l1 != null)
                 {
                     sum += l1.val;
                     l1 = l1.next;
@@ -94,7 +96,7 @@ namespace LeetCode2.StaticFunc
                 if (temp == null)
                 {
                     temp = res = listNode;
-                    
+
                 }
                 else
                 {
@@ -104,7 +106,7 @@ namespace LeetCode2.StaticFunc
 
             }
 
-            if(carry>0)
+            if (carry > 0)
                 temp.next = new ListNode(carry);
 
 
@@ -113,24 +115,24 @@ namespace LeetCode2.StaticFunc
 
         public static int MyAtoi(string s)
         {
-            if (s.Length==0 ||s.Length > 200)
+            if (s.Length == 0 || s.Length > 200)
                 return 0;
 
             long result = 0;
             bool Negative;
             Stack<int> stack = new Stack<int>();
 
-            s=s.Trim();
-            Negative = (s[0] == '-')?true:false;
+            s = s.Trim();
+            Negative = (s[0] == '-') ? true : false;
 
-            var counter=0;
+            var counter = 0;
             if (Negative)
                 counter = 1;
 
-            while (counter<s.Length && (int)(s[counter]) >= 48 && (int)(s[counter]) <= 57)
+            while (counter < s.Length && (int)(s[counter]) >= 48 && (int)(s[counter]) <= 57)
             {
-                    stack.Push(s[counter] - 48);   
-               counter++;    
+                stack.Push(s[counter] - 48);
+                counter++;
             }
 
 
@@ -139,7 +141,7 @@ namespace LeetCode2.StaticFunc
 
             while (stack.Count > 0)
             {
-                result+= (long)Math.Pow(10,counter) * stack.Pop(); 
+                result += (long)Math.Pow(10, counter) * stack.Pop();
                 counter++;
 
             }
@@ -153,7 +155,7 @@ namespace LeetCode2.StaticFunc
                 result = int.MinValue;
             }
 
-            return Negative?(-1)*((int)result):(int)result;
+            return Negative ? (-1) * ((int)result) : (int)result;
         }
 
         public static ListNode MergeTwoLists(ListNode list1, ListNode list2)
@@ -201,7 +203,7 @@ namespace LeetCode2.StaticFunc
         public static int MaxArea(int[] height)
         {
             int MaxArea = 0;
-            int start = 0,end = height.Length-1;
+            int start = 0, end = height.Length - 1;
 
             while (start < end)
             {
@@ -219,7 +221,7 @@ namespace LeetCode2.StaticFunc
                     Console.WriteLine("Max:" + MaxArea);
                     end--;
                 }
-                
+
             }
 
             Console.WriteLine(MaxArea);
@@ -229,11 +231,83 @@ namespace LeetCode2.StaticFunc
 
         public static int GetMaxArea(int NowArea, int TempArea) => NowArea < TempArea ? TempArea : NowArea;
 
-
-        public static int GetMinHeight(int i, int j) => i < j ? i : j; 
-
+        public static int GetMinHeight(int i, int j) => i < j ? i : j;
 
 
+
+        public static int LengthOfLongestSubstringV(string s)//Work
+        {
+            if (string.IsNullOrEmpty(s))
+                return 0;
+
+            int length = s.Length;
+            int start = 0;
+            int end = 0;
+            int maxLen = 0;
+            HashSet<char> temp = new HashSet<char>();
+
+            while(start < length && end < length)
+            {
+                if (temp.Contains(s[end]))
+                {
+                    if(maxLen<temp.Count)
+                        maxLen = temp.Count;
+
+                    temp.Remove(s[start]);
+                    start++;
+                }
+                else
+                {
+                    temp.Add(s[end]);
+                    end++;
+                }
+
+            }
+
+            if (maxLen < temp.Count)
+                maxLen = temp.Count;
+
+            return maxLen;
+        }
+
+        public static int LengthOfLongestSubstring(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+                return 0;
+
+            int res = 0;
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if ((s.Length - i) < res)
+                    break;
+                res = SearchMaxLenSubStr(s[(i)..], res);
+            }
+
+            return res;
+        }
+
+        public static int SearchMaxLenSubStr(string s, int res)
+        {
+            HashSet<char> temp = new HashSet<char>();
+
+            s.ToList().ForEach(x =>
+            {
+                if (temp.Contains(x))
+                {
+                    if (res < temp.Count)
+                        res = temp.Count;
+                    temp.Clear();
+                }
+
+                temp.Add(x);
+            });
+
+            if (res < temp.Count)
+                res = temp.Count;
+
+            return res;
+        }
+        }
     }
-}
 
